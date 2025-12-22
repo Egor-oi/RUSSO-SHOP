@@ -3,101 +3,270 @@
 <head>
 <meta charset="UTF-8">
 <title>RUSSO SHOP</title>
+
 <style>
-body{ margin:0; font-family:Arial,sans-serif; background:#111; color:#fff; overflow-x:hidden;}
-.header{ display:flex; align-items:center; padding:15px; background:#000; gap:10px; flex-wrap:wrap;}
-.logo{ font-size:26px; font-weight:bold;}
-.search-container{ flex:1; display:flex;}
-.search-container input{ flex:1; padding:10px; border-radius:8px; border:none; font-size:16px;}
-.nav{ display:flex; gap:10px;}
-.nav span{ display:block; color:#fff; background:#1b1b1b; padding:10px 15px; border-radius:8px; cursor:pointer;}
-.menu-block{ display:flex; gap:10px; flex-wrap:wrap;}
-.menu-block button{ padding:8px 10px; border:none; border-radius:6px; background:#1b1b1b; color:white; cursor:pointer;}
-.catalog{ padding:20px; display:flex; flex-wrap:wrap; gap:20px; justify-content:center;}
-.card{ width:230px; background:#1b1b1b; padding:15px; border-radius:14px; cursor:pointer; text-align:center; position:relative;}
-.card img{ width:100%; border-radius:10px;}
-.price{ color:red; font-weight:bold;}
-.old{ color:#888; text-decoration:line-through; font-size:14px;}
-.product, .cart, .profile, .productCreator{ display:none; background:#111; color:#fff; min-height:100vh; padding:20px;}
-.product-container{ display:flex; flex-wrap:wrap; gap:20px; justify-content:center; align-items:flex-start;}
-.product-container img{ max-width:400px; border-radius:10px;}
-.product-info{ display:flex; flex-direction:column; gap:10px; min-width:250px;}
-.product-info button{ width:200px; background:#1b1b1b; color:#fff; border:none; border-radius:8px; padding:10px; cursor:pointer;}
-.product-description{ margin-top:20px; background:#1b1b1b; padding:15px; border-radius:10px;}
-.cart-item{ background:#1b1b1b; padding:10px; border-radius:10px; display:flex; gap:10px; margin-bottom:10px; position:relative; align-items:center;}
-.cart-item img{ width:60px; border-radius:5px;}
-.remove{ position:absolute; top:5px; right:8px; color:red; cursor:pointer;}
-.snow{ position:fixed; top:-10px; color:white; animation:fall linear infinite; pointer-events:none; z-index:0;}
-@keyframes fall{ to{transform:translateY(110vh)}}
+/* ===== ОБЩИЙ ВИД ===== */
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#111;
+  color:#fff;
+}
+
+/* ===== ШАПКА ===== */
+.header{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:15px;
+  background:#000;
+}
+.logo{
+  font-size:26px;
+  font-weight:bold;
+}
+.menu{
+  margin-left:auto;
+  cursor:pointer;
+}
+
+/* ===== КАТАЛОГ ===== */
+.catalog{
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(3, 1fr); /* 3 товара в линию */
+  gap:20px;
+}
+
+/* ===== КАРТОЧКА ТОВАРА ===== */
+.card{
+  background:#1b1b1b;
+  border-radius:12px;
+  padding:15px;
+  cursor:pointer;
+}
+.card img{
+  width:100%;
+  border-radius:10px;
+}
+.card h3{
+  margin:10px 0 5px;
+}
+.old{
+  color:#888;
+  text-decoration:line-through;
+}
+.price{
+  color:#fff;
+  font-weight:bold;
+}
+
+/* ===== КОРЗИНА ===== */
+#cart{
+  display:none;
+  padding:20px;
+}
+.cart-item{
+  background:#fff;
+  color:#000;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
+  cursor:pointer;
+}
+.cart-item.selected{
+  outline:3px solid green;
+}
+.cart-footer{
+  margin-top:20px;
+}
+
+/* ===== КНОПКИ ===== */
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  width:100%;
+  margin-top:10px;
+}
+.btn-white{
+  background:#fff;
+  color:#000;
+}
+.btn-purple{
+  background:#7c3aed;
+  color:#fff;
+}
+
+/* ===== ЧЕК ===== */
+#receipt{
+  background:#000;
+  padding:15px;
+  margin-top:15px;
+  display:none;
+  white-space:pre-line;
+  border-radius:10px;
+}
 </style>
 </head>
+
 <body>
 
+<!-- ===== ШАПКА ===== -->
 <div class="header">
-  <div class="logo">RS</div>
-  <div class="search-container">
-    <input id="search" placeholder="Найти на RUSSO SHOP">
-  </div>
-  <div class="nav">
-    <span id="navMain">Главная</span>
-    <span id="navCart">Корзина (<b id="count">0</b>)</span>
-    <span id="navProfile">Личный кабинет</span>
-  </div>
-  <div class="menu-block" id="creatorMenuBlock" style="display:none;">
-    <button id="bgBtn">Сменить фон</button>
-    <button id="textBtn">Изменить текст</button>
-    <button id="btnBtn">Изменить кнопки</button>
-    <button id="discountBtn">Скидки</button>
-    <button id="guiBtn">GUI</button>
-  </div>
-  <div class="menu-block" id="sellerMenuBlock" style="display:none;">
-    <button id="createProdBtn">Создать товар</button>
-  </div>
+  <div class="logo">RUSSO SHOP</div>
+  <div class="menu" onclick="openCart()">Корзина</div>
 </div>
 
-<div id="main" class="catalog"></div>
+<!-- ===== ГЛАВНАЯ ===== -->
+<div id="main" class="catalog">
 
-<div id="product" class="product">
-  <button onclick="back()">← Назад</button>
-  <div class="product-container">
-    <img id="prodImg" src="" alt="Товар">
-    <div class="product-info">
-      <h2 id="prodTitle"></h2>
-      <div class="price"><span id="prodPrice"></span> <span class="old" id="prodOldPrice"></span></div>
-      <button id="addCartBtn">Добавить в корзину</button>
-      <button id="deleteProdBtn" style="display:none;">Удалить товар</button>
-    </div>
+  <!-- ===== ТОВАР 1 ===== -->
+  <!-- КОПИРУЕШЬ ЭТОТ БЛОК — ПОЛУЧАЕТСЯ НОВЫЙ ТОВАР -->
+  <div class="card" onclick="addToCart(0)">
+    <!-- КАРТИНКА -->
+    <img src="rgb.png">
+    <!-- НАЗВАНИЕ -->
+    <h3>RGB подсветка с Алисой</h3>
+    <!-- СТАРАЯ ЦЕНА -->
+    <div class="old">2 670 ₽</div>
+    <!-- ЦЕНА СО СКИДКОЙ -->
+    <div class="price">2 563 ₽</div>
   </div>
-  <div class="product-description" id="prodDesc"></div>
+
 </div>
 
-<div id="cart" class="cart">
-  <button onclick="back()">← Назад</button>
+<!-- ===== КОРЗИНА ===== -->
+<div id="cart">
+  <button class="btn-white" onclick="back()">← Назад</button>
+
   <h2>Корзина</h2>
-  <div id="cartItems">Корзина пуста</div>
-</div>
+  <div id="cartItems"></div>
 
-<div id="profile" class="profile">
-  <button onclick="back()">← Назад</button>
-  <h2>Личный кабинет</h2>
-  <div id="loginForm">
-    <input id="loginName" placeholder="Имя"><br>
-    <input id="loginPass" type="password" placeholder="Пароль"><br>
-    <button id="loginBtn">Войти</button>
+  <div class="cart-footer">
+    <div>Выделено: <b id="selectedCount">0</b></div>
+    <button class="btn-purple" onclick="makeReceipt()">Получить чек</button>
+    <div id="receipt"></div>
+    <button id="buyBtn" class="btn-purple" style="display:none" onclick="goBuy()">Купить</button>
   </div>
 </div>
 
-<div id="productCreator" class="productCreator">
-  <button onclick="closeProductCreator()">← Назад</button>
-  <h2>Создать товар</h2>
-  <input id="newProdName" placeholder="Название"><br>
-  <textarea id="newProdDesc" placeholder="Описание"></textarea><br>
-  <input id="newProdPrice" placeholder="Цена"><br>
-  <input id="newProdOldPrice" placeholder="Старая цена (не обязательно)"><br>
-  <input type="file" id="newProdPhotos" multiple accept="image/*"><br>
-  <button id="createProdFinalBtn">Создать</button>
-</div>
+<script>
+/* ===== МАССИВ ТОВАРОВ ===== */
+const products = [
+  {
+    name: "RGB подсветка с Алисой", // название
+    price: 2563,                  // цена со скидкой
+    oldPrice: 2670                // старая цена
+  }
+];
 
+let cart = [];
+let selected = [];
+
+/* ===== ДОБАВИТЬ В КОРЗИНУ ===== */
+function addToCart(index){
+  cart.push(products[index]);
+  alert("Товар добавлен в корзину");
+}
+
+/* ===== ОТКРЫТЬ КОРЗИНУ ===== */
+function openCart(){
+  document.getElementById("main").style.display="none";
+  document.getElementById("cart").style.display="block";
+  renderCart();
+}
+
+/* ===== НАЗАД ===== */
+function back(){
+  document.getElementById("cart").style.display="none";
+  document.getElementById("main").style.display="grid";
+}
+
+/* ===== ОТРИСОВКА КОРЗИНЫ ===== */
+function renderCart(){
+  const box=document.getElementById("cartItems");
+  box.innerHTML="";
+  selected=[];
+  updateSelected();
+
+  cart.forEach((item,i)=>{
+    const div=document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML=`${item.name} — ${item.price} ₽`;
+    div.onclick=()=>{
+      if(selected.includes(i)){
+        selected=selected.filter(x=>x!==i);
+        div.classList.remove("selected");
+      }else{
+        selected.push(i);
+        div.classList.add("selected");
+      }
+      updateSelected();
+    };
+    box.appendChild(div);
+  });
+}
+
+/* ===== ОБНОВИТЬ СЧЁТЧИК ===== */
+function updateSelected(){
+  document.getElementById("selectedCount").innerText=selected.length;
+}
+
+/* ===== СОЗДАТЬ ЧЕК ===== */
+function makeReceipt(){
+  if(selected.length===0){
+    alert("Ничего не выбрано");
+    return;
+  }
+
+  let text="RUSSO SHOP\n——————————————\n";
+  let sum=0;
+  let sumOld=0;
+
+  selected.forEach(i=>{
+    const p=cart[i];
+    text+=`${p.name} — ${p.price} ₽\n`;
+    sum+=p.price;
+    sumOld+=p.oldPrice;
+  });
+
+  text+=`——————————————\n`;
+  text+=`Общая сумма: ${sumOld} ₽\n`;
+  text+=`Общая сумма со скидкой: ${sum} ₽`;
+
+  const r=document.getElementById("receipt");
+  r.style.display="block";
+  r.innerText=text;
+
+  const buy=document.getElementById("buyBtn");
+  buy.style.display="block";
+  buy.innerText="Сохранить чек";
+  buy.onclick=()=>saveReceipt(text);
+}
+
+/* ===== СОХРАНИТЬ ЧЕК ===== */
+function saveReceipt(text){
+  const blob=new Blob([text],{type:"text/plain"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="receipt.txt";
+  a.click();
+
+  const buy=document.getElementById("buyBtn");
+  buy.innerText="Купить";
+  buy.onclick=goBuy;
+}
+
+/* ===== ПОКУПКА ===== */
+function goBuy(){
+  window.open("https://t.me/rislan666","_blank");
+}
+</script>
+
+</body>
+</html>
 <div id="guiContainer"></div>
 
 <script>
@@ -139,6 +308,7 @@ function openMain(){ hideAll(); main.style.display='flex'; renderMain(); }
 function back(){ openMain(); }
 function saveProducts(){ localStorage.setItem('products', JSON.stringify(products)); }
 function saveCart(){ localStorage.setItem('cart', JSON.stringify(cart)); }
+
 
 
 
