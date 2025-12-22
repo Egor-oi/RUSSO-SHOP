@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>RUSSO SHOP</title>
+<style>
+body{ margin:0; font-family:Arial,sans-serif; background:#111; color:#fff; overflow-x:hidden;}
+.header{ display:flex; align-items:center; padding:15px; background:#000; gap:10px; flex-wrap:wrap;}
+.logo{ font-size:26px; font-weight:bold;}
+.search-container{ flex:1; display:flex;}
+.search-container input{ flex:1; padding:10px; border-radius:8px; border:none; font-size:16px;}
+.nav{ display:flex; gap:10px;}
+.nav span{ display:block; color:#fff; background:#1b1b1b; padding:10px 15px; border-radius:8px; cursor:pointer;}
+.menu-block{ display:flex; gap:10px; flex-wrap:wrap;}
+.menu-block button{ padding:8px 10px; border:none; border-radius:6px; background:#1b1b1b; color:white; cursor:pointer;}
+.catalog{ padding:20px; display:flex; flex-wrap:wrap; gap:20px; justify-content:center;}
+.card{ width:230px; background:#1b1b1b; padding:15px; border-radius:14px; cursor:pointer; text-align:center; position:relative;}
+.card img{ width:100%; border-radius:10px;}
+.price{ color:red; font-weight:bold;}
+.old{ color:#888; text-decoration:line-through; font-size:14px;}
+.product, .cart, .profile, .productCreator{ display:none; background:#111; color:#fff; min-height:100vh; padding:20px;}
+.product-container{ display:flex; flex-wrap:wrap; gap:20px; justify-content:center; align-items:flex-start;}
+.product-container img{ max-width:400px; border-radius:10px;}
+.product-info{ display:flex; flex-direction:column; gap:10px; min-width:250px;}
+.product-info button{ width:200px; background:#1b1b1b; color:#fff; border:none; border-radius:8px; padding:10px; cursor:pointer;}
+.product-description{ margin-top:20px; background:#1b1b1b; padding:15px; border-radius:10px;}
+.cart-item{ background:#1b1b1b; padding:10px; border-radius:10px; display:flex; gap:10px; margin-bottom:10px; position:relative; align-items:center;}
+.cart-item img{ width:60px; border-radius:5px;}
+.remove{ position:absolute; top:5px; right:8px; color:red; cursor:pointer;}
+.snow{ position:fixed; top:-10px; color:white; animation:fall linear infinite; pointer-events:none; z-index:0;}
+@keyframes fall{ to{transform:translateY(110vh)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">RS</div>
+  <div class="search-container">
+    <input id="search" placeholder="Найти на RUSSO SHOP">
+  </div>
+  <div class="nav">
+    <span id="navMain">Главная</span>
+    <span id="navCart">Корзина (<b id="count">0</b>)</span>
+    <span id="navProfile">Личный кабинет</span>
+  </div>
+  <div class="menu-block" id="creatorMenuBlock" style="display:none;">
+    <button id="bgBtn">Сменить фон</button>
+    <button id="textBtn">Изменить текст</button>
+    <button id="btnBtn">Изменить кнопки</button>
+    <button id="discountBtn">Скидки</button>
+    <button id="guiBtn">GUI</button>
+  </div>
+  <div class="menu-block" id="sellerMenuBlock" style="display:none;">
+    <button id="createProdBtn">Создать товар</button>
+  </div>
+</div>
+
+<div id="main" class="catalog"></div>
+
+<div id="product" class="product">
+  <button onclick="back()">← Назад</button>
+  <div class="product-container">
+    <img id="prodImg" src="" alt="Товар">
+    <div class="product-info">
+      <h2 id="prodTitle"></h2>
+      <div class="price"><span id="prodPrice"></span> <span class="old" id="prodOldPrice"></span></div>
+      <button id="addCartBtn">Добавить в корзину</button>
+      <button id="deleteProdBtn" style="display:none;">Удалить товар</button>
+    </div>
+  </div>
+  <div class="product-description" id="prodDesc"></div>
+</div>
+
+<div id="cart" class="cart">
+  <button onclick="back()">← Назад</button>
+  <h2>Корзина</h2>
+  <div id="cartItems">Корзина пуста</div>
+</div>
+
+<div id="profile" class="profile">
+  <button onclick="back()">← Назад</button>
+  <h2>Личный кабинет</h2>
+  <div id="loginForm">
+    <input id="loginName" placeholder="Имя"><br>
+    <input id="loginPass" type="password" placeholder="Пароль"><br>
+    <button id="loginBtn">Войти</button>
+  </div>
+</div>
+
+<div id="productCreator" class="productCreator">
+  <button onclick="closeProductCreator()">← Назад</button>
+  <h2>Создать товар</h2>
+  <input id="newProdName" placeholder="Название"><br>
+  <textarea id="newProdDesc" placeholder="Описание"></textarea><br>
+  <input id="newProdPrice" placeholder="Цена"><br>
+  <input id="newProdOldPrice" placeholder="Старая цена (не обязательно)"><br>
+  <input type="file" id="newProdPhotos" multiple accept="image/*"><br>
+  <button id="createProdFinalBtn">Создать</button>
+</div>
+
+<div id="guiContainer"></div>
+
+<script>
+// ======================= DATA =======================
+const accounts=[
+  {name:'egors', pass:'vVQ-a2p-fNQ-eYa', creator:true, seller:true},
+  {name:'ruslan', pass:'a408a2b1-588e-40a1-948f-8f5638158983', creator:false, seller:true}
+];
+
+let cart=JSON.parse(localStorage.getItem('cart'))||[];
+let products=JSON.parse(localStorage.getItem('products'))||[
+  {img:'rgb.png', title:'RGB подсветка с Алисой', desc:'Описание товара', price:2563, oldPrice:2733}
+];
+let currentProduct=null;
+let currentUser=null;
+
+// ======================= SNEAKY SNOW =======================
+for(let i=0;i<30;i++){
+  let s=document.createElement('div');
+  s.className='snow';
+  s.innerHTML='❄';
+  s.style.left=Math.random()*100+'vw';
+  s.style.fontSize=(10+Math.random()*20)+'px';
+  s.style.animationDuration=(5+Math.random()*5)+'s';
+  document.body.appendChild(s);
+}
+
+// ======================= NAV =======================
+const main=document.getElementById('main');
+const product=document.getElementById('product');
+const cartDiv=document.getElementById('cart');
+const profileDiv=document.getElementById('profile');
+const creatorMenuBlock=document.getElementById('creatorMenuBlock');
+const sellerMenuBlock=document.getElementById('sellerMenuBlock');
+const productCreator=document.getElementById('productCreator');
+
+function hideAll(){ main.style.display='none'; product.style.display='none'; cartDiv.style.display='none'; profileDiv.style.display='none'; productCreator.style.display='none'; }
+function openMain(){ hideAll(); main.style.display='flex'; renderMain(); }
+function back(){ openMain(); }
+function saveProducts(){ localStorage.setItem('products', JSON.stringify(products)); }
+function saveCart(){ localStorage.setItem('cart', JSON.stringify(cart)); }
+
+// ======================= RENDER =======================
+function renderMain(){
+  main.innerHTML='';
+  products.forEach((p,i)=>{
+    const card=document.createElement('div'); card.className='card';
+    const img=document.createElement('img'); img.src=p.img;
+    const title=document.createElement('h3'); title.innerText=p.title;
+    const priceDiv=document.createElement('div'); priceDiv.className='price';
+    priceDiv.innerHTML=p.price+' ₽ <span class="old">'+(p.oldPrice?p.oldPrice+' ₽':'')+'</span>';
+    card.appendChild(img); card.appendChild(title); card.appendChild(priceDiv);
+
+    if(currentUser?.seller){
+      const delBtn=document.createElement('button'); delBtn.innerText='Удалить';
+      delBtn.onclick=(e)=>{ e.stopPropagation(); products.splice(i,1); saveProducts(); renderMain(); };
+      card.appendChild(delBtn);
+    }
+
+    card.onclick=()=>{ openProductPage(i); };
+    main.appendChild(card);
+  });
+}
+
+// ======================= PRODUCT PAGE =======================
+function openProductPage(i){
+  hideAll(); product.style.display='block'; currentProduct=products[i];
+  document.getElementById('prodImg').src=currentProduct.img;
+  document.getElementById('prodTitle').innerText=currentProduct.title;
+  document.getElementById('prodPrice').innerText=currentProduct.price;
+  document.getElementById('prodOldPrice').innerText=currentProduct.oldPrice?currentProduct.oldPrice:'';
+  document.getElementById('prodDesc').innerText=currentProduct.desc;
+  const delBtn=document.getElementById('deleteProdBtn');
+  if(currentUser?.seller){ delBtn.style.display='block'; delBtn.onclick=()=>{ products.splice(i,1); saveProducts(); openMain(); }; }
+  else delBtn.style.display='none';
+}
+
+// ======================= LOGIN =======================
+document.getElementById('loginBtn').onclick=function(){
+  const name=document.getElementById('loginName').value.trim();
+  const pass=document.getElementById('loginPass').value.trim();
+  const acc=accounts.find(a=>a.name===name && a.pass===pass);
+  if(!acc){ alert('Неверный логин или пароль'); return; }
+  currentUser=acc;
+  document.getElementById('loginForm').style.display='none';
+  if(acc.creator) creatorMenuBlock.style.display='flex';
+  if(acc.seller) sellerMenuBlock.style.display='flex';
+  openMain();
+}
+
+// ======================= CART =======================
+function updateCart(){
+  document.getElementById('count').innerText=cart.length;
+  const cartItems=document.getElementById('cartItems');
+  cartItems.innerHTML='';
+  if(cart.length===0){ cartItems.innerHTML='Корзина пуста'; return; }
+  cart.forEach((i,n)=>{
+    const div=document.createElement('div'); div.className='cart-item';
+    div.innerHTML=`<img src="${i.img}"><div>${i.title}<br><b>${i.price} ₽</b></div><button onclick="window.location.href='https://t.me/rislan666'">Купить</button><span class="remove">✖</span>`;
+    div.querySelector('.remove').onclick=function(){ cart.splice(n,1); saveCart(); updateCart(); };
+    cartItems.appendChild(div);
+  });
+}
+document.getElementById('addCartBtn').onclick=function(){ if(currentProduct){ cart.push(currentProduct); saveCart(); updateCart(); alert('Товар добавлен в корзину'); } }
+updateCart();
+
+// ======================= CREATE PRODUCT =======================
+document.getElementById('createProdBtn').onclick=function(){ hideAll(); productCreator.style.display='block'; }
+function closeProductCreator(){ productCreator.style.display='none'; openMain(); }
+document.getElementById('createProdFinalBtn').onclick=function(){
+  const name=document.getElementById('newProdName').value.trim();
+  const desc=document.getElementById('newProdDesc').value.trim();
+  const price=parseInt(document.getElementById('newProdPrice').value.trim());
+  const oldPrice=parseInt(document.getElementById('newProdOldPrice').value.trim())||0;
+  const photos=document.getElementById('newProdPhotos').files;
+  if(!name || !desc || photos.length===0){ alert('Заполните название, описание и добавьте фото'); return; }
+  const reader=new FileReader();
+  reader.onload=function(e){
+    products.push({img:e.target.result,title:name,desc:desc,price:price,oldPrice:oldPrice});
+    saveProducts(); renderMain(); closeProductCreator();
+  }
+  reader.readAsDataURL(photos[0]);
+}
+
+// ======================= NAV =======================
+document.getElementById('navMain').onclick=openMain;
+document.getElementById('navCart').onclick=function(){ hideAll(); cartDiv.style.display='block'; updateCart(); };
+document.getElementById('navProfile').onclick=function(){ hideAll(); profileDiv.style.display='block'; };
+
+renderMain();
+</script>
+</body>
+</html>
