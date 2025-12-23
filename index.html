@@ -28,27 +28,27 @@ body{
 
 /* ===== КАТАЛОГ ===== */
 .catalog{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:6px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
   padding:6px;
+  justify-content:flex-start;
 }
 
-/* ===== МАЛЕНЬКАЯ КАРТОЧКА ===== */
+/* ===== КАРТОЧКА ===== */
 .card{
   background:#111;
   border-radius:8px;
   padding:5px;
-  font-size:11px;
+  font-size:12px;
+  width:140px; /* фиксированная ширина */
 }
 .card img{
   width:100%;
-  height:110px;
+  height:120px;
   object-fit:cover;
   border-radius:6px;
 }
-
-/* ===== БЕЙДЖ ===== */
 .badge{
   background:#c80000;
   color:white;
@@ -58,8 +58,6 @@ body{
   display:inline-block;
   margin-bottom:3px;
 }
-
-/* ===== ЦЕНЫ ===== */
 .old{
   color:#fff;
   text-decoration:line-through;
@@ -149,17 +147,10 @@ for(let i=0;i<25;i++){
 const products=[
 {
  name:"RGB подсветка",
- img:"rgb.png", // ← картинка
- old:2670,      // ← старая цена
- price:2563,    // ← новая цена
+ img:"rgb.png", // картинка
+ old:2670,      // старая цена
+ price:2563,    // новая цена
  desc:"Умная RGB подсветка для комнаты"
-},
-{
- name:"Неоновая лампа",
- img:"lamp.png",
- old:1990,
- price:1790,
- desc:"Стильный неоновый светильник"
 }
 ];
 
@@ -239,7 +230,6 @@ function makeCheck(){
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#000";
   ctx.font="14px Arial";
-
   lines.forEach((l,i)=>ctx.fillText(l,10,25+i*22));
 
   const a=document.createElement("a");
