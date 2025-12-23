@@ -34,7 +34,7 @@ body{
   padding:6px 10px;
   cursor:pointer;
   font-size:14px;
-  width:auto; /* убираем растяжение */
+  width:auto;
 }
 
 /* ===== СНЕЖИНКИ ===== */
@@ -53,9 +53,10 @@ body{
 /* ===== КАТАЛОГ ===== */
 .catalog{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-  gap:10px;
-  padding:10px;
+  grid-template-columns:repeat(auto-fit,minmax(400px,1fr));
+  gap:15px;
+  padding:15px;
+  justify-content:center;
 }
 
 /* ===== КАРТОЧКА ===== */
@@ -63,43 +64,45 @@ body{
   background:#111;
   border-radius:10px;
   overflow:hidden;
-  padding:5px;
-  font-size:12px;
+  padding:10px;
+  font-size:14px;
   display:flex;
   flex-direction:column;
   align-items:center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width:130px;  /* фиксированная ширина */
+  width:400px;
+  height:560px;
 }
 .card img{
   width:100%;
-  height:100px;
+  height:300px; /* оставляем место для текста под картинкой */
   object-fit:cover;
   border-radius:6px;
-  margin-bottom:5px;
+  margin-bottom:10px;
 }
 .card:hover{
   transform: translateY(-5px);
-  box-shadow:0 4px 12px rgba(255,255,255,0.2);
+  box-shadow:0 6px 15px rgba(255,255,255,0.3);
 }
 .badge{
   background:#c80000;
   color:white;
-  font-size:9px;
-  padding:2px 5px;
+  font-size:12px;
+  padding:4px 6px;
   border-radius:5px;
   display:inline-block;
-  margin-bottom:4px;
+  margin-bottom:6px;
 }
 .old{
   color:#fff;
   text-decoration:line-through;
-  opacity:.6;
-  font-size:11px;
+  opacity:.7;
+  font-size:13px;
 }
 .price{
-  font-size:13px;
+  font-size:16px;
   font-weight:bold;
+  margin-bottom:8px;
 }
 
 /* ===== СТРАНИЦЫ ===== */
@@ -110,16 +113,16 @@ button{
   background:#fff;
   color:#000;
   border:none;
-  padding:8px;
-  border-radius:6px;
-  width:100%;
+  padding:10px;
+  border-radius:8px;
+  width:90%;
   margin-top:6px;
   font-weight:bold;
 }
 
 /* ===== СТРАНИЦА ТОВАРА ===== */
 #product img{
-  max-height:180px;
+  max-height:300px;
   width:auto;
   display:block;
   margin:0 auto 10px auto;
@@ -128,33 +131,28 @@ button{
 /* ===== КОРЗИНА ===== */
 .cart-item{
   background:#111;
-  padding:6px;
+  padding:8px;
   border-radius:8px;
   display:flex;
-  gap:6px;
-  margin-bottom:6px;
+  gap:10px;
+  margin-bottom:10px;
 }
 .cart-item img{
-  width:50px;
-  height:50px;
+  width:60px;
+  height:60px;
   object-fit:cover;
   border-radius:6px;
 }
 
 /* ===== АДАПТИВ ===== */
+@media(max-width:900px){
+  .catalog{
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  }
+}
 @media(max-width:600px){
   .catalog{
-    grid-template-columns:1fr;
-  }
-}
-@media(min-width:601px) and (max-width:900px){
-  .catalog{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-@media(min-width:901px){
-  .catalog{
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   }
 }
 </style>
@@ -284,13 +282,13 @@ function makeCheck(){
   lines.push("Со скидкой: "+sum+" ₽");
 
   const canvas=document.createElement("canvas");
-  canvas.width=300;
+  canvas.width=400;
   canvas.height=lines.length*22+20;
   const ctx=canvas.getContext("2d");
   ctx.fillStyle="#fff";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#000";
-  ctx.font="14px Arial";
+  ctx.font="16px Arial";
   lines.forEach((l,i)=>ctx.fillText(l,10,25+i*22));
 
   const a=document.createElement("a");
