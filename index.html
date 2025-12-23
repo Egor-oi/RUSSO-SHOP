@@ -8,7 +8,7 @@
 <style>
 body{
   margin:0;
-  background:#222; /* тёмно-серый фон страниц */
+  background:#222; /* тёмно-серый фон */
   color:#fff;
   font-family:Arial,sans-serif;
 }
@@ -31,8 +31,10 @@ body{
   color:#000;
   border:none;
   border-radius:6px;
-  padding:6px 12px;
+  padding:6px 10px;
   cursor:pointer;
+  font-size:14px;
+  width:auto; /* убираем растяжение */
 }
 
 /* ===== СНЕЖИНКИ ===== */
@@ -51,7 +53,7 @@ body{
 /* ===== КАТАЛОГ ===== */
 .catalog{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
   gap:10px;
   padding:10px;
 }
@@ -67,10 +69,11 @@ body{
   flex-direction:column;
   align-items:center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width:130px;  /* фиксированная ширина */
 }
 .card img{
   width:100%;
-  height:120px;
+  height:100px;
   object-fit:cover;
   border-radius:6px;
   margin-bottom:5px;
@@ -107,8 +110,8 @@ button{
   background:#fff;
   color:#000;
   border:none;
-  padding:10px;
-  border-radius:8px;
+  padding:8px;
+  border-radius:6px;
   width:100%;
   margin-top:6px;
   font-weight:bold;
@@ -116,7 +119,7 @@ button{
 
 /* ===== СТРАНИЦА ТОВАРА ===== */
 #product img{
-  max-height:200px;
+  max-height:180px;
   width:auto;
   display:block;
   margin:0 auto 10px auto;
@@ -136,6 +139,23 @@ button{
   height:50px;
   object-fit:cover;
   border-radius:6px;
+}
+
+/* ===== АДАПТИВ ===== */
+@media(max-width:600px){
+  .catalog{
+    grid-template-columns:1fr;
+  }
+}
+@media(min-width:601px) and (max-width:900px){
+  .catalog{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+@media(min-width:901px){
+  .catalog{
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 </style>
 </head>
@@ -184,7 +204,7 @@ for(let i=0;i<25;i++){
   document.body.appendChild(s);
 }
 
-/* ===== ТОВАР ===== */
+/* ===== ТОВАРЫ ===== */
 const products=[
 {
  name:"RGB подсветка",
