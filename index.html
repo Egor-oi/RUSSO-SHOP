@@ -21,7 +21,7 @@ body{
   background:#000;
 }
 .logo{
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
 }
 .cart-btn{
@@ -29,95 +29,110 @@ body{
   cursor:pointer;
 }
 
-/* ===== КАТАЛОГ ===== */
+/* ===== КАТАЛОГ (МОБИЛЬНЫЙ ПЕРВЫМ) ===== */
 .catalog{
-  padding:12px;
+  padding:10px;
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
 }
-@media(max-width:768px){
-  .catalog{grid-template-columns:repeat(2,1fr);}
+@media(min-width:900px){
+  .catalog{grid-template-columns:repeat(3,1fr);}
 }
 
-/* ===== КАРТОЧКА ТОВАРА ===== */
+/* ===== КАРТОЧКА ===== */
 .card{
   background:#1b1b1b;
   border-radius:12px;
   padding:8px;
+  font-size:13px;
+}
+.badge{
+  color:#7c3aed;
+  font-size:11px;
+  margin-bottom:4px;
 }
 .card img{
   width:100%;
   border-radius:8px;
 }
 .card h3{
-  font-size:14px;
+  font-size:13px;
   margin:6px 0 4px;
 }
 .old{
-  font-size:12px;
-  color:#888;
+  color:red;
   text-decoration:line-through;
+  font-size:12px;
 }
 .price{
   font-size:14px;
   font-weight:bold;
 }
 
-/* ===== КНОПКИ ===== */
-.btn{
-  width:100%;
-  padding:8px;
-  border:none;
-  border-radius:8px;
-  margin-top:6px;
-  cursor:pointer;
-}
-.white{background:#fff;color:#000;}
-.purple{background:#7c3aed;color:#fff;}
-
 /* ===== СТРАНИЦА ТОВАРА ===== */
 #productPage{
   display:none;
-  padding:15px;
+  padding:12px;
+}
+.prod-top{
+  display:flex;
+  gap:10px;
 }
 .prod-img{
-  width:100%;
-  max-width:320px;
+  width:50%;
   border-radius:12px;
 }
+.prod-info{
+  width:50%;
+}
 .prod-old{
-  color:#888;
+  color:red;
   text-decoration:line-through;
 }
 .prod-price{
-  font-size:20px;
+  font-size:18px;
   font-weight:bold;
-  margin:5px 0;
 }
-.desc{
-  font-size:14px;
-  line-height:1.4;
-  margin-top:10px;
+.btn{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
+.white{background:#fff;color:#000;}
 
 /* ===== КОРЗИНА ===== */
 #cart{
   display:none;
-  padding:15px;
+  padding:12px;
 }
 .cart-item{
   background:#fff;
   color:#000;
   border-radius:10px;
-  padding:10px;
+  padding:8px;
   display:flex;
-  gap:10px;
-  margin-bottom:10px;
+  gap:8px;
+  margin-bottom:8px;
+  cursor:pointer;
+}
+.cart-item.selected{
+  outline:3px solid #7c3aed;
 }
 .cart-item img{
-  width:60px;
+  width:55px;
   border-radius:8px;
+}
+
+/* ===== ЧЕК ===== */
+#receiptBox{
+  background:#000;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
+  display:none;
+  white-space:pre-line;
 }
 
 /* ===== СНЕЖИНКИ ===== */
@@ -136,7 +151,6 @@ body{
 
 <body>
 
-<!-- ===== ШАПКА ===== -->
 <div class="header">
   <div class="logo">RUSSO SHOP</div>
   <div class="cart-btn" onclick="openCart()">Корзина</div>
@@ -144,75 +158,59 @@ body{
 
 <!-- ===== ГЛАВНАЯ ===== -->
 <div id="main" class="catalog">
-
-  <!-- ===== ТОВАР 1 ===== -->
   <div class="card" onclick="openProduct(0)">
+    <div class="badge">Новогодние скидки</div>
     <img src="rgb.png">
     <h3>RGB подсветка с Алисой</h3>
     <div class="old">2 670 ₽</div>
     <div class="price">2 563 ₽</div>
   </div>
-
-   <!-- ===== ТОВАР 2 ===== -->
-  <div class="card" onclick="openProduct(1)">
-    <img src="azer.png">
-    <h3>АзерЧай</h3>
-    <div class="old">500 ₽</div>
-    <div class="price">350 ₽</div>
-  </div>
-
 </div>
 
-<!-- ===== СТРАНИЦА ТОВАРА ===== -->
+<!-- ===== ТОВАР ===== -->
 <div id="productPage">
-  <button class="btn white" onclick="backToMain()">← Назад</button>
+  <button class="btn white" onclick="back()">← Назад</button>
 
-  <img id="pImg" class="prod-img">
-  <h2 id="pName"></h2>
-  <div class="prod-old" id="pOld"></div>
-  <div class="prod-price" id="pPrice"></div>
+  <div class="prod-top">
+    <img id="pImg" class="prod-img">
+    <div class="prod-info">
+      <h2 id="pName"></h2>
+      <div class="prod-old" id="pOld"></div>
+      <div class="prod-price" id="pPrice"></div>
+      <button class="btn white" onclick="addCurrent()">Добавить в корзину</button>
+    </div>
+  </div>
 
-  <div class="desc" id="pDesc"></div>
-
-  <button class="btn white" onclick="addCurrentToCart()">Добавить в корзину</button>
+  <p id="pDesc"></p>
 </div>
 
 <!-- ===== КОРЗИНА ===== -->
 <div id="cart">
-  <button class="btn white" onclick="backToMain()">← Назад</button>
+  <button class="btn white" onclick="back()">← Назад</button>
   <h2>Корзина</h2>
   <div id="cartItems"></div>
+  <div>Выделено: <b id="selCount">0</b></div>
+  <button class="btn white" onclick="makeReceipt()">Получить чек</button>
+  <div id="receiptBox"></div>
 </div>
 
 <script>
-/* ===== ТОВАРЫ ===== */
-const products=[
-  {
-    name:"RGB подсветка с Алисой",
-    price:2563,
-    old:2670,
-    img:"rgb.png",
-    desc:"Умная RGB подсветка с управлением через Алису, пульт и телефон. Поддержка светомузыки, регулировка яркости и цветов."
-  },
-  {
-    name:"Азерчай",
-    price:560,
-    old:240,
-    img:"azer.png",
-    desc:"Вкусный чай от руслана."
-  }
-];
+const products=[{
+  name:"RGB подсветка с Алисой",
+  price:2563,
+  old:2670,
+  img:"rgb.png",
+  desc:"Умная RGB подсветка с управлением через Алису, пульт и телефон."
+}];
 
-let currentProduct=null;
-let cart=[];
+let cart=[], selected=[], current=null;
 
-/* ===== ОТКРЫТЬ ТОВАР ===== */
+/* ===== ОТКРЫТИЯ ===== */
 function openProduct(i){
-  currentProduct=i;
+  current=i;
   main.style.display="none";
   cartDiv.style.display="none";
   productPage.style.display="block";
-
   const p=products[i];
   pImg.src=p.img;
   pName.innerText=p.name;
@@ -221,13 +219,11 @@ function openProduct(i){
   pDesc.innerText=p.desc;
 }
 
-/* ===== В КОРЗИНУ ===== */
-function addCurrentToCart(){
-  cart.push(products[currentProduct]);
-  alert("Добавлено в корзину");
+function addCurrent(){
+  cart.push(products[current]);
+  alert("Добавлено");
 }
 
-/* ===== ОТКРЫТЬ КОРЗИНУ ===== */
 function openCart(){
   main.style.display="none";
   productPage.style.display="none";
@@ -235,25 +231,69 @@ function openCart(){
   renderCart();
 }
 
-/* ===== КОРЗИНА ===== */
-function renderCart(){
-  cartItems.innerHTML="";
-  cart.forEach(p=>{
-    const div=document.createElement("div");
-    div.className="cart-item";
-    div.innerHTML=`
-      <img src="${p.img}">
-      <div>${p.name}<br><b>${p.price} ₽</b></div>
-    `;
-    cartItems.appendChild(div);
-  });
-}
-
-/* ===== НАЗАД ===== */
-function backToMain(){
+function back(){
   main.style.display="grid";
   productPage.style.display="none";
   cartDiv.style.display="none";
+}
+
+/* ===== КОРЗИНА ===== */
+function renderCart(){
+  cartItems.innerHTML="";
+  selected=[];
+  updateSel();
+  cart.forEach((p,i)=>{
+    const d=document.createElement("div");
+    d.className="cart-item";
+    d.innerHTML=`<img src="${p.img}"><div>${p.name}<br><b>${p.price} ₽</b></div>`;
+    d.onclick=()=>{
+      if(selected.includes(i)){
+        selected=selected.filter(x=>x!==i);
+        d.classList.remove("selected");
+      }else{
+        selected.push(i);
+        d.classList.add("selected");
+      }
+      updateSel();
+    };
+    cartItems.appendChild(d);
+  });
+}
+function updateSel(){
+  selCount.innerText=selected.length;
+}
+
+/* ===== ЧЕК КАК КАРТИНКА ===== */
+function makeReceipt(){
+  if(!selected.length)return alert("Не выбрано");
+  let text="RUSSO SHOP\n——————————\n";
+  let sum=0, oldSum=0;
+  selected.forEach(i=>{
+    const p=cart[i];
+    text+=`${p.name} — ${p.price} ₽\n`;
+    sum+=p.price;
+    oldSum+=p.old;
+  });
+  text+=`——————————\nОбщая сумма: ${oldSum} ₽\nСо скидкой: ${sum} ₽`;
+
+  receiptBox.style.display="block";
+  receiptBox.innerText=text;
+
+  // canvas -> png
+  const canvas=document.createElement("canvas");
+  const ctx=canvas.getContext("2d");
+  canvas.width=400;
+  canvas.height=300;
+  ctx.fillStyle="#000";
+  ctx.fillRect(0,0,400,300);
+  ctx.fillStyle="#fff";
+  ctx.font="14px Arial";
+  text.split("\n").forEach((l,i)=>ctx.fillText(l,10,20+i*18));
+
+  const a=document.createElement("a");
+  a.href=canvas.toDataURL("image/png");
+  a.download="receipt.png";
+  a.click();
 }
 
 /* ===== DOM ===== */
@@ -261,6 +301,8 @@ const main=document.getElementById("main");
 const productPage=document.getElementById("productPage");
 const cartDiv=document.getElementById("cart");
 const cartItems=document.getElementById("cartItems");
+const selCount=document.getElementById("selCount");
+const receiptBox=document.getElementById("receiptBox");
 const pImg=document.getElementById("pImg");
 const pName=document.getElementById("pName");
 const pOld=document.getElementById("pOld");
