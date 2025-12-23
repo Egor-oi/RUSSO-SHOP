@@ -8,9 +8,31 @@
 <style>
 body{
   margin:0;
-  background:#000;
+  background:#222; /* тёмно-серый фон страниц */
   color:#fff;
   font-family:Arial,sans-serif;
+}
+
+/* ===== ШАПКА ===== */
+.header{
+  background:#111;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.header h1{
+  color:#fff;
+  font-size:20px;
+  margin:0;
+}
+.header button{
+  background:#fff;
+  color:#000;
+  border:none;
+  border-radius:6px;
+  padding:6px 12px;
+  cursor:pointer;
 }
 
 /* ===== СНЕЖИНКИ ===== */
@@ -29,7 +51,7 @@ body{
 /* ===== КАТАЛОГ ===== */
 .catalog{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
   gap:10px;
   padding:10px;
 }
@@ -51,14 +73,12 @@ body{
   height:120px;
   object-fit:cover;
   border-radius:6px;
-  margin-bottom:6px;
+  margin-bottom:5px;
 }
 .card:hover{
   transform: translateY(-5px);
   box-shadow:0 4px 12px rgba(255,255,255,0.2);
 }
-
-/* ===== БЕЙДЖ ===== */
 .badge{
   background:#c80000;
   color:white;
@@ -68,8 +88,6 @@ body{
   display:inline-block;
   margin-bottom:4px;
 }
-
-/* ===== ЦЕНЫ ===== */
 .old{
   color:#fff;
   text-decoration:line-through;
@@ -96,6 +114,14 @@ button{
   font-weight:bold;
 }
 
+/* ===== СТРАНИЦА ТОВАРА ===== */
+#product img{
+  max-height:200px;
+  width:auto;
+  display:block;
+  margin:0 auto 10px auto;
+}
+
 /* ===== КОРЗИНА ===== */
 .cart-item{
   background:#111;
@@ -116,7 +142,10 @@ button{
 
 <body>
 
-<h2 style="text-align:center;margin:10px 0">RUSSO SHOP</h2>
+<div class="header">
+  <h1>RUSSO SHOP</h1>
+  <button onclick="show('cart')">Корзина</button>
+</div>
 
 <!-- ===== ГЛАВНАЯ ===== -->
 <div id="home" class="page active">
@@ -125,7 +154,7 @@ button{
 
 <!-- ===== СТРАНИЦА ТОВАРА ===== -->
 <div id="product" class="page">
-  <img id="pImg" style="width:100%;max-height:220px;object-fit:cover">
+  <img id="pImg">
   <h3 id="pName"></h3>
   <div class="old" id="pOld"></div>
   <div class="price" id="pPrice"></div>
@@ -155,7 +184,7 @@ for(let i=0;i<25;i++){
   document.body.appendChild(s);
 }
 
-/* ===== ТОВАРЫ ===== */
+/* ===== ТОВАР ===== */
 const products=[
 {
  name:"RGB подсветка",
@@ -221,7 +250,7 @@ function renderCart(){
   count.innerText=cart.length;
 }
 
-/* ===== ЧЕК (СКАЧИВАЕТСЯ КАРТИНКОЙ) ===== */
+/* ===== ЧЕК ===== */
 function makeCheck(){
   let sum=0, old=0;
   let lines=["RUSSO SHOP",""];
