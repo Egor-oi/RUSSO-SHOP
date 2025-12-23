@@ -8,316 +8,245 @@
 <style>
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:#111;
+  background:#000;
   color:#fff;
+  font-family:Arial,sans-serif;
 }
 
-/* ===== ШАПКА ===== */
-.header{
+/* ===== ГИРЛЯНДА ===== */
+.garland{
   display:flex;
-  align-items:center;
-  padding:12px;
-  background:#000;
+  justify-content:space-around;
+  padding:6px;
 }
-.logo{
-  font-size:20px;
-  font-weight:bold;
-}
-.cart-btn{
-  margin-left:auto;
-  cursor:pointer;
-}
-
-/* ===== КАТАЛОГ (МОБИЛЬНЫЙ ПЕРВЫМ) ===== */
-.catalog{
-  padding:10px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-@media(min-width:900px){
-  .catalog{grid-template-columns:repeat(3,1fr);}
-}
-
-/* ===== КАРТОЧКА ===== */
-.card{
-  background:#1b1b1b;
-  border-radius:12px;
-  padding:8px;
-  font-size:13px;
-}
-.badge{
-  color:#7c3aed;
-  font-size:11px;
-  margin-bottom:4px;
-}
-.card img{
-  width:100%;
-  border-radius:8px;
-}
-.card h3{
-  font-size:13px;
-  margin:6px 0 4px;
-}
-.old{
-  color:red;
-  text-decoration:line-through;
-  font-size:12px;
-}
-.price{
+.garland span{
   font-size:14px;
-  font-weight:bold;
+  animation:blink 1.5s infinite alternate;
 }
-
-/* ===== СТРАНИЦА ТОВАРА ===== */
-#productPage{
-  display:none;
-  padding:12px;
-}
-.prod-top{
-  display:flex;
-  gap:10px;
-}
-.prod-img{
-  width:50%;
-  border-radius:12px;
-}
-.prod-info{
-  width:50%;
-}
-.prod-old{
-  color:red;
-  text-decoration:line-through;
-}
-.prod-price{
-  font-size:18px;
-  font-weight:bold;
-}
-.btn{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-.white{background:#fff;color:#000;}
-
-/* ===== КОРЗИНА ===== */
-#cart{
-  display:none;
-  padding:12px;
-}
-.cart-item{
-  background:#fff;
-  color:#000;
-  border-radius:10px;
-  padding:8px;
-  display:flex;
-  gap:8px;
-  margin-bottom:8px;
-  cursor:pointer;
-}
-.cart-item.selected{
-  outline:3px solid #7c3aed;
-}
-.cart-item img{
-  width:55px;
-  border-radius:8px;
-}
-
-/* ===== ЧЕК ===== */
-#receiptBox{
-  background:#000;
-  padding:10px;
-  border-radius:10px;
-  margin-top:10px;
-  display:none;
-  white-space:pre-line;
-}
+.garland span:nth-child(odd){color:red}
+.garland span:nth-child(even){color:white}
+@keyframes blink{from{opacity:.3}to{opacity:1}}
 
 /* ===== СНЕЖИНКИ ===== */
 .snow{
   position:fixed;
   top:-10px;
   color:white;
-  pointer-events:none;
+  font-size:14px;
   animation:fall linear infinite;
 }
 @keyframes fall{
-  to{transform:translateY(110vh)}
+  to{transform:translateY(100vh)}
+}
+
+/* ===== КАТАЛОГ ===== */
+.catalog{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  padding:8px;
+}
+
+/* ===== КАРТОЧКА ===== */
+.card{
+  background:#111;
+  border-radius:10px;
+  padding:6px;
+  font-size:12px;
+}
+.card img{
+  width:100%;
+  border-radius:8px;
+}
+.badge{
+  background:red;
+  color:white;
+  font-size:10px;
+  padding:2px 6px;
+  border-radius:6px;
+  display:inline-block;
+  margin-bottom:4px;
+}
+.old{
+  color:#fff;
+  text-decoration:line-through;
+  opacity:.6;
+}
+.price{font-weight:bold}
+
+/* ===== СТРАНИЦЫ ===== */
+.page{display:none}
+.page.active{display:block}
+
+button{
+  background:#fff;
+  color:#000;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  width:100%;
+  margin-top:6px;
+  font-weight:bold;
+}
+
+/* ===== КОРЗИНА ===== */
+.cart-item{
+  background:#111;
+  padding:6px;
+  border-radius:8px;
+  display:flex;
+  gap:6px;
+  margin-bottom:6px;
+}
+.cart-item img{
+  width:60px;
+  border-radius:6px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="logo">RUSSO SHOP</div>
-  <div class="cart-btn" onclick="openCart()">Корзина</div>
+<div class="garland">
+  <span>●</span><span>●</span><span>●</span><span>●</span><span>●</span>
+  <span>●</span><span>●</span><span>●</span><span>●</span><span>●</span>
 </div>
 
+<h2 style="text-align:center">RUSSO SHOP</h2>
+
 <!-- ===== ГЛАВНАЯ ===== -->
-<div id="main" class="catalog">
-  <div class="card" onclick="openProduct(0)">
-    <div class="badge">Новогодние скидки</div>
-    <img src="rgb.png">
-    <h3>RGB подсветка с Алисой</h3>
-    <div class="old">2 670 ₽</div>
-    <div class="price">2 563 ₽</div>
-  </div>
+<div id="home" class="page active">
+  <div class="catalog" id="catalog"></div>
 </div>
 
 <!-- ===== ТОВАР ===== -->
-<div id="productPage">
-  <button class="btn white" onclick="back()">← Назад</button>
-
-  <div class="prod-top">
-    <img id="pImg" class="prod-img">
-    <div class="prod-info">
-      <h2 id="pName"></h2>
-      <div class="prod-old" id="pOld"></div>
-      <div class="prod-price" id="pPrice"></div>
-      <button class="btn white" onclick="addCurrent()">Добавить в корзину</button>
-    </div>
-  </div>
-
+<div id="product" class="page">
+  <img id="pImg" style="width:100%">
+  <h3 id="pName"></h3>
+  <div class="old" id="pOld"></div>
+  <div class="price" id="pPrice"></div>
   <p id="pDesc"></p>
+  <button onclick="addToCart()">Добавить в корзину</button>
 </div>
 
 <!-- ===== КОРЗИНА ===== -->
-<div id="cart">
-  <button class="btn white" onclick="back()">← Назад</button>
-  <h2>Корзина</h2>
-  <div id="cartItems"></div>
-  <div>Выделено: <b id="selCount">0</b></div>
-  <button class="btn white" onclick="makeReceipt()">Получить чек</button>
-  <div id="receiptBox"></div>
+<div id="cart" class="page">
+  <h3>Корзина</h3>
+  <div id="cartList"></div>
+  <p>Выделено: <span id="count">0</span></p>
+  <button onclick="makeCheck()">Получить чек</button>
+  <div id="check"></div>
 </div>
 
 <script>
-const products=[{
-  name:"RGB подсветка с Алисой",
-  price:2563,
-  old:2670,
-  img:"rgb.png",
-  desc:"Умная RGB подсветка с управлением через Алису, пульт и телефон."
-}];
+/* ===== СНЕГ ===== */
+for(let i=0;i<30;i++){
+  let s=document.createElement("div");
+  s.className="snow";
+  s.innerHTML="❄";
+  s.style.left=Math.random()*100+"%";
+  s.style.animationDuration=5+Math.random()*5+"s";
+  document.body.appendChild(s);
+}
 
-let cart=[], selected=[], current=null;
+/* ===== ТОВАРЫ ===== */
+const products=[
+{
+ name:"RGB подсветка",
+ img:"rgb.png",
+ old:2670,
+ price:2563,
+ desc:"Умная RGB подсветка для комнаты"
+},
+{
+ name:"Неоновая лампа",
+ img:"lamp.png",
+ old:1990,
+ price:1790,
+ desc:"Неоновый светильник"
+}
+];
 
-/* ===== ОТКРЫТИЯ ===== */
+let current=null;
+let cart=[];
+
+/* ===== РЕНДЕР ===== */
+const cat=document.getElementById("catalog");
+products.forEach((p,i)=>{
+  cat.innerHTML+=`
+  <div class="card" onclick="openProduct(${i})">
+    <div class="badge">НОВОГОДНЯЯ СКИДКА</div>
+    <img src="${p.img}">
+    <b>${p.name}</b>
+    <div class="old">${p.old} ₽</div>
+    <div class="price">${p.price} ₽</div>
+  </div>`;
+});
+
+function show(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
 function openProduct(i){
-  current=i;
-  main.style.display="none";
-  cartDiv.style.display="none";
-  productPage.style.display="block";
-  const p=products[i];
-  pImg.src=p.img;
-  pName.innerText=p.name;
-  pOld.innerText=p.old+" ₽";
-  pPrice.innerText=p.price+" ₽";
-  pDesc.innerText=p.desc;
+  current=products[i];
+  pImg.src=current.img;
+  pName.innerText=current.name;
+  pOld.innerText=current.old+" ₽";
+  pPrice.innerText=current.price+" ₽";
+  pDesc.innerText=current.desc;
+  show("product");
 }
 
-function addCurrent(){
-  cart.push(products[current]);
-  alert("Добавлено");
-}
-
-function openCart(){
-  main.style.display="none";
-  productPage.style.display="none";
-  cartDiv.style.display="block";
+function addToCart(){
+  cart.push(current);
+  show("cart");
   renderCart();
 }
 
-function back(){
-  main.style.display="grid";
-  productPage.style.display="none";
-  cartDiv.style.display="none";
-}
-
-/* ===== КОРЗИНА ===== */
 function renderCart(){
-  cartItems.innerHTML="";
-  selected=[];
-  updateSel();
-  cart.forEach((p,i)=>{
-    const d=document.createElement("div");
-    d.className="cart-item";
-    d.innerHTML=`<img src="${p.img}"><div>${p.name}<br><b>${p.price} ₽</b></div>`;
-    d.onclick=()=>{
-      if(selected.includes(i)){
-        selected=selected.filter(x=>x!==i);
-        d.classList.remove("selected");
-      }else{
-        selected.push(i);
-        d.classList.add("selected");
-      }
-      updateSel();
-    };
-    cartItems.appendChild(d);
+  cartList.innerHTML="";
+  cart.forEach(p=>{
+    cartList.innerHTML+=`
+    <div class="cart-item">
+      <img src="${p.img}">
+      <div>
+        <b>${p.name}</b><br>
+        ${p.price} ₽
+      </div>
+    </div>`;
   });
-}
-function updateSel(){
-  selCount.innerText=selected.length;
+  count.innerText=cart.length;
 }
 
-/* ===== ЧЕК КАК КАРТИНКА ===== */
-function makeReceipt(){
-  if(!selected.length)return alert("Не выбрано");
-  let text="RUSSO SHOP\n——————————\n";
-  let sum=0, oldSum=0;
-  selected.forEach(i=>{
-    const p=cart[i];
+function makeCheck(){
+  let sum=0,old=0;
+  let text="RUSSO SHOP\n\n";
+  cart.forEach(p=>{
     text+=`${p.name} — ${p.price} ₽\n`;
-    sum+=p.price;
-    oldSum+=p.old;
+    sum+=p.price; old+=p.old;
   });
-  text+=`——————————\nОбщая сумма: ${oldSum} ₽\nСо скидкой: ${sum} ₽`;
+  text+=`\nОбщая сумма: ${old} ₽\nСо скидкой: ${sum} ₽`;
 
-  receiptBox.style.display="block";
-  receiptBox.innerText=text;
-
-  // canvas -> png
   const canvas=document.createElement("canvas");
+  canvas.width=300;
+  canvas.height=400;
   const ctx=canvas.getContext("2d");
-  canvas.width=400;
-  canvas.height=300;
-  ctx.fillStyle="#000";
-  ctx.fillRect(0,0,400,300);
   ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,300,400);
+  ctx.fillStyle="#000";
   ctx.font="14px Arial";
   text.split("\n").forEach((l,i)=>ctx.fillText(l,10,20+i*18));
 
+  const img=canvas.toDataURL("image/png");
   const a=document.createElement("a");
-  a.href=canvas.toDataURL("image/png");
-  a.download="receipt.png";
+  a.href=img;
+  a.download="check.png";
   a.click();
-}
 
-/* ===== DOM ===== */
-const main=document.getElementById("main");
-const productPage=document.getElementById("productPage");
-const cartDiv=document.getElementById("cart");
-const cartItems=document.getElementById("cartItems");
-const selCount=document.getElementById("selCount");
-const receiptBox=document.getElementById("receiptBox");
-const pImg=document.getElementById("pImg");
-const pName=document.getElementById("pName");
-const pOld=document.getElementById("pOld");
-const pPrice=document.getElementById("pPrice");
-const pDesc=document.getElementById("pDesc");
-
-/* ===== СНЕЖИНКИ ===== */
-for(let i=0;i<25;i++){
-  const s=document.createElement("div");
-  s.className="snow";
-  s.innerHTML="❄";
-  s.style.left=Math.random()*100+"vw";
-  s.style.animationDuration=5+Math.random()*5+"s";
-  s.style.fontSize=10+Math.random()*10+"px";
-  document.body.appendChild(s);
+  setTimeout(()=>{
+    location.href="https://t.me/rislan666";
+  },1000);
 }
 </script>
 
