@@ -28,27 +28,37 @@ body{
 
 /* ===== КАТАЛОГ ===== */
 .catalog{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  padding:6px;
-  justify-content:flex-start;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;
+  padding:10px;
 }
 
 /* ===== КАРТОЧКА ===== */
 .card{
   background:#111;
-  border-radius:8px;
+  border-radius:10px;
+  overflow:hidden;
   padding:5px;
   font-size:12px;
-  width:140px; /* фиксированная ширина */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .card img{
   width:100%;
   height:120px;
   object-fit:cover;
   border-radius:6px;
+  margin-bottom:6px;
 }
+.card:hover{
+  transform: translateY(-5px);
+  box-shadow:0 4px 12px rgba(255,255,255,0.2);
+}
+
+/* ===== БЕЙДЖ ===== */
 .badge{
   background:#c80000;
   color:white;
@@ -56,16 +66,18 @@ body{
   padding:2px 5px;
   border-radius:5px;
   display:inline-block;
-  margin-bottom:3px;
+  margin-bottom:4px;
 }
+
+/* ===== ЦЕНЫ ===== */
 .old{
   color:#fff;
   text-decoration:line-through;
   opacity:.6;
-  font-size:10px;
+  font-size:11px;
 }
 .price{
-  font-size:12px;
+  font-size:13px;
   font-weight:bold;
 }
 
@@ -104,7 +116,7 @@ button{
 
 <body>
 
-<h2 style="text-align:center;margin:8px 0">RUSSO SHOP</h2>
+<h2 style="text-align:center;margin:10px 0">RUSSO SHOP</h2>
 
 <!-- ===== ГЛАВНАЯ ===== -->
 <div id="home" class="page active">
@@ -133,13 +145,13 @@ button{
 </div>
 
 <script>
-/* ===== СНЕГ ===== */
+/* ===== СНЕЖИНКИ ===== */
 for(let i=0;i<25;i++){
   let s=document.createElement("div");
   s.className="snow";
   s.innerHTML="❄";
   s.style.left=Math.random()*100+"%";
-  s.style.animationDuration=6+Math.random()*6+"s";
+  s.style.animationDuration=5+Math.random()*5+"s";
   document.body.appendChild(s);
 }
 
@@ -147,9 +159,9 @@ for(let i=0;i<25;i++){
 const products=[
 {
  name:"RGB подсветка",
- img:"rgb.png", // картинка
- old:2670,      // старая цена
- price:2563,    // новая цена
+ img:"rgb.png",
+ old:2670,
+ price:2563,
  desc:"Умная RGB подсветка для комнаты"
 }
 ];
@@ -176,7 +188,7 @@ function show(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* ===== ТОВАР ===== */
+/* ===== СТРАНИЦА ТОВАРА ===== */
 function openProduct(i){
   current=products[i];
   pImg.src=current.img;
